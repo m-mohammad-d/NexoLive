@@ -1,5 +1,3 @@
-
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -9,24 +7,49 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
-  id             String   @id @default(uuid())
-  email          String   @unique
-  username       String   @unique
-  imageUrl       String   
-  externalUserId String   @unique
-  bio            String? 
+  id             String  @id @default(uuid())
+  email          String  @unique
+  username       String  @unique
+  imageUrl       String
+  externalUserId String  @unique
+  bio            String?
 
-  
   following  Follow[] @relation("Following")
   followedBy Follow[] @relation("FollowedBy")
-  blocking  Block[] @relation("Blocking")
-  blockedBy Block[] @relation("BlockedBy")
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  blocking   Block[]  @relation("Blocking")
+  blockedBy  Block[]  @relation("BlockedBy")
+
+  stream Stream?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
+model Stream {
+  id           String  @id @default(uuid())
+  name         String  @db.Text
+  thumbnailUrl String? @db.Text
+
+  ingressId String? @unique
+  serverUrl String? @db.Text
+  streamKey String? @db.Text
+
+  isLive              Boolean @default(false)
+  isChatEnabled       Boolean @default(true)
+  isChatDelayed       Boolean @default(false)
+  isChatFollowersOnly Boolean @default(false)
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([ingressId])
+  @@index([name])
+}
 
 model Follow {
   id          String @id @default(uuid())
@@ -43,9 +66,6 @@ model Follow {
   @@index([followerId])
   @@index([followingId])
 }
-
-
-
 
 model Block {
   id        String @id @default(uuid())
