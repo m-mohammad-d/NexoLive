@@ -10,7 +10,11 @@ export const getFollwedUser = async () => {
         followerId: self.id,
       },
       include: {
-        following: true,
+        following: {
+          include: {
+            stream: true,
+          },
+        },
       },
     });
 
