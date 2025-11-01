@@ -6,7 +6,11 @@ import { Stream, User } from "@prisma/client";
 import { useSidebar } from "@/store/use-sidebar";
 import { UserItem, UserItemSkeleton } from "./UserItem";
 
-export function Recommended({ data }: { data: (User & { stream: Stream | null})[] }) {
+export function Recommended({
+  data,
+}: {
+  data: (User & { stream: { isLive: true } | null })[];
+}) {
   const { collapsed } = useSidebar((state) => state);
 
   const showLabel = !collapsed && data.length > 0;

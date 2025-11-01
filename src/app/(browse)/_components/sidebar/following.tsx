@@ -9,7 +9,7 @@ export function Following({
 }: {
   data: (Follow & {
     following: User & {
-      stream: Stream | null;
+      stream: { isLive: true } | null;
     };
   })[];
 }) {
