@@ -13,6 +13,7 @@ import { ChatVariant, useChatSidebar } from "@/store/use-chat-sidebar";
 import { ChatHeader, ChatHeaderSkeleton } from "./ChatHeader";
 import { ChatList, ChatListSkeleton } from "./ChatList";
 import { ChatForm, ChatFormSkeleton } from "./ChatForm";
+import { ChatCommunity } from "./ChatCommunity";
 
 export function Chat({
   hostName,
@@ -78,6 +79,15 @@ export function Chat({
             isFollowersOnly={isChatFollowersOnly}
             isDelayed={isChatDelayed}
             isFollowing={isFollowing}
+          />
+        </>
+      )}
+      {variant === ChatVariant.COMMUNITY && (
+        <>
+          <ChatCommunity
+            hostName={hostName}
+            viewerName={viewerName}
+            isHidden={isHidden}
           />
         </>
       )}
