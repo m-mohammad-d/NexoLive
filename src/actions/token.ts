@@ -6,7 +6,6 @@ import { getSelf } from "@/service/auth-service";
 import { isBlockedByUser } from "@/service/block-service";
 import { getUserById } from "@/service/user-service";
 
-
 export const createViewerToken = async (hostIdentity: string) => {
   let self;
 
@@ -38,7 +37,6 @@ export const createViewerToken = async (hostIdentity: string) => {
     {
       identity: isHost ? `host-${self.id}` : self.id,
       name: self.username,
-    
     }
   );
 
