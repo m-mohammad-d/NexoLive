@@ -10,6 +10,7 @@ import { Video } from "./Video";
 import { Chat } from "./Chat";
 import { ChatToggle } from "./ChatToggle";
 import { Header } from "./Header";
+import { InfoCard } from "./InfoCard";
 type CustomStream = {
   id: string;
   isChatEnabled: boolean;
@@ -67,6 +68,12 @@ export function StreamPlayer({
             isFollowing={isFollowing}
             name={stream.name}
             viewerIdentity={identity}
+          />
+          <InfoCard
+            hostIdentity={user.id}
+            viewerIdentity={identity}
+            name={stream.name}
+            thumbnailUrl={stream.thumbnailUrl}
           />
         </div>
         <div className={cn("col-span-1", collapsed && "hidden")}>
