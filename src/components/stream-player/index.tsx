@@ -9,6 +9,7 @@ import { useChatSidebar } from "@/store/use-chat-sidebar";
 import { Video } from "./Video";
 import { Chat } from "./Chat";
 import { ChatToggle } from "./ChatToggle";
+import { Header } from "./Header";
 type CustomStream = {
   id: string;
   isChatEnabled: boolean;
@@ -59,6 +60,14 @@ export function StreamPlayer({
       >
         <div className="space-y-4 col-span-1 lg:col-span-2 xl:col-span-2 2xl:col-span-5 lg:overflow-y-auto hidden-scrollbar pb-10">
           <Video hostName={user.username} hostIdentity={user.id} />
+          <Header
+            imageUrl={user.imageUrl}
+            hostName={user.username}
+            hostIdentity={user.id}
+            isFollowing={isFollowing}
+            name={stream.name}
+            viewerIdentity={identity}
+          />
         </div>
         <div className={cn("col-span-1", collapsed && "hidden")}>
           <Chat
