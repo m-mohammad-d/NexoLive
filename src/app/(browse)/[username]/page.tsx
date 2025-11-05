@@ -1,19 +1,29 @@
 import React from "react";
 import { notFound } from "next/navigation";
+
+import { StreamPlayer } from "@/components/stream-player";
+import { isBlockedByUser } from "@/service/block-service";
 import { isFollowingUser } from "@/service/follow-service";
 import { getUserByUsername } from "@/service/user-service";
-import { Actions } from "./_components/actions";
-import { isBlockedByUser } from "@/service/block-service";
 
 interface UserPageProps {
-  params: Promise<{ username: string }>;
+  params: { username: string };
 }
 
-export default async function UserPage({ params }: UserPageProps) {
-  const { username } = await params;
+export async function generateMetadata({
+  params: { username },
+}: UserPageProps) {
+  return {
+    title: username,
+  };
+}
+
+export default async function UserPage({
+  params: { username },
+}: UserPageProps) {
   const user = await getUserByUsername(username);
 
-  if (!user) notFound();
+  if (!user || !user.stream) notFound();
 
   const isFollowing = await isFollowingUser(user.id);
   const isBlocked = await isBlockedByUser(user.id);
@@ -21,18 +31,6 @@ export default async function UserPage({ params }: UserPageProps) {
   if (isBlocked) notFound();
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold">{user.username}</h1>
-      <p className="mt-2">{user.bio}</p>
-      <p className="mt-2 text-sm text-gray-500">
-        Followers: {user._count.followedBy}
-      </p>
-      <p className="mt-2 text-sm text-gray-500">
-        {isFollowing
-          ? "You are following this user"
-          : "You are not following this user"}
-      </p>
-      <Actions userId={user.id} isFollowing={isFollowing} />
-    </div>
+    <StreamPlayer user={user} isFollowing={isFollowing} stream={user.stream} />
   );
 }
