@@ -1,11 +1,11 @@
+import React from "react";
+
+import { Recommended, RecommendedSkeleton } from "./recommended";
+import { Following, FollowingSkeleton } from "./following";
 import { getFollwedUser } from "@/service/follow-service";
 import { getRecommended } from "@/service/recommended-service";
-import React from "react";
-import { Following, FollowingSkeleton } from "./following";
-import { Recommended, RecommendedSkeleton } from "./recommended";
 import { Toggle, ToggleSkeleton } from "./Toggle";
 import { Wrapper } from "./Wrapper";
-
 
 export async function Sidebar() {
   const recommended = await getRecommended();

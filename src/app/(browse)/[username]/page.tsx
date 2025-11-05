@@ -7,20 +7,19 @@ import { isFollowingUser } from "@/service/follow-service";
 import { getUserByUsername } from "@/service/user-service";
 
 interface UserPageProps {
-  params: { username: string };
+  params: Promise<{ username: string }>;
 }
 
-export async function generateMetadata({
-  params: { username },
-}: UserPageProps) {
+export async function generateMetadata({ params }: UserPageProps) {
+  const { username } = await params;
   return {
     title: username,
   };
 }
 
-export default async function UserPage({
-  params: { username },
-}: UserPageProps) {
+export default async function UserPage({ params }: UserPageProps) {
+  const { username } = await params;
+
   const user = await getUserByUsername(username);
 
   if (!user || !user.stream) notFound();

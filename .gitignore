@@ -41,3 +41,9 @@ yarn-error.log*
 next-env.d.ts
 
 /src/generated/prisma
+
+
+
+# Serwist
+public/sw*
+public/swe-worker*
