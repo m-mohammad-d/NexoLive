@@ -1,0 +1,30 @@
+
+Sitemap: https://nexo-live.vercel.app//sitemap.xml
+
+
+User-agent: *
+Allow: /
+
+Disallow: /api/
+Disallow: /_next/
+Disallow: /offline/
+Disallow: /(auth)/
+Disallow: /(dashboard)/
+Disallow: /admin/
+Disallow: /private/
+
+# Optional crawl-delay to reduce server load
+Crawl-delay: 5
+
+# Specific bots can have different rules
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 2
+
+# Block specific unwanted bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
