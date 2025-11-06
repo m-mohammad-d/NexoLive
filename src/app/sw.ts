@@ -1,9 +1,10 @@
 import type { PrecacheEntry, SerwistGlobalConfig } from "serwist";
 import {
   CacheFirst,
-  StaleWhileRevalidate,
   ExpirationPlugin,
+  NetworkFirst,
   Serwist,
+  StaleWhileRevalidate,
 } from "serwist";
 
 declare global {
@@ -18,57 +19,77 @@ const serwist = new Serwist({
   skipWaiting: true,
   clientsClaim: true,
   navigationPreload: true,
-
   runtimeCaching: [
     {
-      matcher: ({ request, url }) =>
-        request.destination === "image" || url.hostname.includes("utfs.io"),
-      handler: new StaleWhileRevalidate({
-        cacheName: "images-cache",
+      matcher: ({ url }) => url.pathname.startsWith("/offline/"),
+      handler: new NetworkFirst({
+        cacheName: "offline-cache",
         plugins: [
           new ExpirationPlugin({
-            maxEntries: 150,
-            maxAgeSeconds: 14 * 24 * 60 * 60,
+            maxEntries: 50,
+            maxAgeSeconds: 7 * 24 * 60 * 60,
           }),
         ],
       }),
     },
-
+    {
+      matcher: ({ request }) => request.destination === "image",
+      handler: new StaleWhileRevalidate({
+        cacheName: "images-cache",
+        plugins: [
+          new ExpirationPlugin({
+            maxEntries: 100,
+            maxAgeSeconds: 7 * 24 * 60 * 60,
+          }),
+        ],
+      }),
+    },
     {
       matcher: ({ request }) => request.destination === "font",
       handler: new CacheFirst({
         cacheName: "fonts-cache",
         plugins: [
           new ExpirationPlugin({
+            maxEntries: 30,
+            maxAgeSeconds: 30 * 24 * 60 * 60,
+          }),
+        ],
+      }),
+    },
+    {
+      matcher: ({ request }) => request.destination === "script",
+      handler: new CacheFirst({
+        cacheName: "scripts-cache",
+        plugins: [
+          new ExpirationPlugin({
             maxEntries: 50,
-            maxAgeSeconds: 60 * 24 * 60 * 60,
+            maxAgeSeconds: 7 * 24 * 60 * 60,
           }),
         ],
       }),
     },
 
     {
-      matcher: ({ request }) =>
-        request.destination === "script" || request.destination === "style",
-      handler: new StaleWhileRevalidate({
-        cacheName: "assets-cache",
+      matcher: ({ request }) => request.destination === "style",
+      handler: new CacheFirst({
+        cacheName: "styles-cache",
         plugins: [
           new ExpirationPlugin({
-            maxEntries: 100,
-            maxAgeSeconds: 14 * 24 * 60 * 60,
+            maxEntries: 50,
+            maxAgeSeconds: 7 * 24 * 60 * 60,
           }),
         ],
       }),
     },
   ],
-
   fallbacks: {
     entries: [
       {
         url: "/offline",
         matcher({ request }) {
           return (
-            request.destination === "document" && !request.url.includes("/api/")
+            request.destination === "document" &&
+            !request.url.includes("/api/") 
           );
         },
       },
